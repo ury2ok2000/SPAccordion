@@ -1,0 +1,107 @@
+<!--REQUIREMENTS
+<link rel="stylesheet" type="text/css" href="/5AF/CS/CCP/SiteAssets/Scripts/VisitRequestScripts/jquery-ui.min.css"></link>
+<script type="text/javascript" src="jquery-ui.js"></script>
+<script type="text/javascript" src="jquery-3.3.1.js"></script>
+ 
+NOTE: This style below is not necessary for script, it is just a visual preference-->
+
+
+<style>
+.accordionHeader{
+	color:#000063;
+	font-size: 18px !important;
+	font-weight:bolder;
+}
+
+.clickheretext{
+	font-style:italic;
+	color:#b27300;
+}
+
+.accordionSubHeaderLink{
+	font-family:Rockwell;
+	font-weight:bold;
+	color: #0072bc !important;
+}
+.accordionSubHeader{
+	font-family:Rockwell;
+	color: #0072bc !important;
+}
+#accordion{
+	border-top:1px;
+	outline: none;
+	ie-dummy: expression(this.hideFocus=true);
+	width:100%;
+	height:100%;
+}
+</style>
+
+
+<script type="text/javascript">
+		 //Sharepoint- helps insure the function i scalled at the correct time (normally we would just use $(document).ready
+		 _spBodyOnLoadFunctionNames.push("CreateAccordion"); 
+
+	
+	function CreateAccordion(){	
+			//Get only the view parts that have list view class
+				//this means we will get all listViewWebParts in the DOM
+			var Parent = $(".ms-listviewtable").closest(".ms-rtestate-read.ms-rte-wpbox");
+			
+			/*According to JQuery-UI Accordion Instructions: The markup of HTML should be structured like the below:
+				<div id="accordion">
+  					<h3>First header</h3>
+  					<div>First content panel</div>
+  					<h3>Second header</h3>
+  					<div>Second content panel</div>
+				</div>*/
+				
+			//Therefore we first begin by wrapping all (as a total, if we used wrap() it would wrap each - which we dont want) identified listViewWebparts	
+		    Parent.wrapAll("<div id='accordion'>");
+		    
+		
+			//Because we ant the Header to contain the ListViewWebParts Name, we need to grab the name, which happens to live within the h2 element's first span element
+			var HeaderElement = Parent.find("h2").find("span:first"); 
+			
+			//Now we will process each name
+			HeaderElement.each( function(index, element){			 
+				//And insert our h3 with our listViewWebPart name included
+				$("<h3><span  class='accordionHeader'>"+ element.innerText + "</span></h3>").insertBefore($(this).closest(".ms-rtestate-read.ms-rte-wpbox"));
+			});
+			
+			/* To make things look nice, we take the simple example above and want to include the following modification, so that the structure will look like
+				<div class="container" style="height:500px;" align="center">
+						<table width="100%" align="left">
+							<tbody>
+								<tr>
+									<td align="left" valign="top" style="margin-left:0px;background-color:#FFFFFF;"></td>
+								</tr>
+							</tbody>
+						</table>
+				</div>
+			*/
+						
+			Parent.attr('class', 'container');
+			Parent.attr('style', 'height:500px');
+			Parent.attr('align', 'center');
+			
+			Parent.find('table').attr('align', 'left');
+			Parent.find('table').attr('width', '100%');
+			Parent.find('table').find('td').attr('align', 'left');
+			Parent.find('table').find('td').attr('valign', 'top');
+			Parent.find('table').find('td').attr('style', 'margin-left:0px;background-color:#FFFFFF;');
+		
+		//now active the accordion by the id we set earlier - including some initial options 			
+    	$("#accordion").accordion(
+		{ 
+			header: "h3", 
+			collapsible: true, 
+			active: false,
+			heightStyle: "content", //fixes for auto-height (auto-adjusts to each accordion cell)
+			autoHeight: false, //fixes for auto-height (auto-adjusts to each accordion cell)
+			clearStyle: true, //fixes for auto-height (auto-adjusts to each accordion cell)
+			navigation: true,
+			icons: false
+		});			 
+		
+	}
+</script>
